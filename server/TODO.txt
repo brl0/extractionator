@@ -1,0 +1,67 @@
+TODO and Ideas
+
+
+Links
+    URL parsing, show parts
+        interesting queries or searches?
+    Domain summary
+        validation
+        DNS records
+        TLD
+            Count
+    Link checking via HEAD
+    Link crawling via GET
+        depth?
+        check for link back
+        Extract title from linked pages
+        Extract info
+Content analysis
+    Character count
+    Word count
+    WordCloud
+    Topic extraction
+        LDA graphic
+    Entities
+        Events
+            Dates
+            Calendar items
+        Amounts
+        Contacts
+            Contact name lookup, linking
+            Phone numbers
+                Validation
+                area and exchange codes info
+                Lookup
+            Addresses
+                Validity
+    Images
+        Image metadata
+        OCR
+        Object recognition
+        Related images
+Technical info
+    Web server info
+        OS
+        Software
+    Site structure
+        Site map
+        Scripts used
+        CSS
+        CDN
+        Other embedded objects
+            Frames
+            Media
+    Performance information
+        Load time
+        Ping, latency
+    IP information
+        Route information
+        ISP
+        Ownership info
+        Geographic location
+Metadata extraction
+    Copyright information
+    License
+    Author
+User registration to prevent abuse
+    Captcha?

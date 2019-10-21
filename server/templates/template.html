@@ -1,0 +1,26 @@
+{% if result.title %}
+<h4>Title</h4>
+<h1>{{result.title}}</h1>
+<hr>
+{% endif %}
+
+{% if result.url %}
+<h4>URL</h4>
+<h2>{{result.url}}</h2>
+<hr>
+{% endif %}
+
+{% if result.text %}
+<h4>Extracted text (length {{ result.text|length }})</h4>
+<div>
+    <pre class=" break-word">{{result.text}}</pre>
+</div>
+<hr>
+{% endif %}
+
+{% if tables %}
+{% for table in tables %}
+{{ table|safe }}
+<hr>
+{% endfor %}
+{% endif %}

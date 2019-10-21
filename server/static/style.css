@@ -1,0 +1,62 @@
+body {
+  margin: 0 auto;
+}
+
+p {
+  margin: 0;
+}
+
+h1 {
+  font: bold 1.2em/100% Arial, Helvetica, sans-serif;
+}
+
+h2 {
+  font: bold 1.2em/100% Arial, Helvetica, sans-serif;
+}
+
+h3 {
+  font: bold 1.2em/100% Arial, Helvetica, sans-serif;
+}
+
+h4 {
+  font: bold 1em/100% Arial, Helvetica, sans-serif;
+  margin: 5px 0;
+  color: #999;
+}
+
+pre {
+  overflow-x: auto;
+  /* Use horizontal scroller if needed; for Firefox 2, not needed in Firefox 3 */
+  overflow: auto;
+  display: block;
+  text-align: left;
+  font-family: monospace;
+  white-space: pre-wrap;
+  /* Since CSS 2.1 */
+  white-space: -moz-pre-wrap !important;
+  /* Mozilla, since 1999 */
+  white-space: -pre-wrap;
+  /* Opera 4-6 */
+  white-space: -o-pre-wrap;
+  /* Opera 7 */
+  word-wrap: break-word;
+  /* Internet Explorer 5.5+ */
+  margin: 1em 0;
+}
+
+div {
+  background: #ededed;
+  border: solid 1px #ccc;
+  padding: 10px;
+  word-wrap: normal;
+  word-break: normal;
+  white-space: pre-wrap;
+  display: block;
+  height: auto;
+  margin: 3px auto;
+  line-height: 1.4;
+}
+
+.break-word {
+  word-wrap: break-word;
+}
