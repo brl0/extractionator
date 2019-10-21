@@ -14,7 +14,7 @@ from data_table import data_table
 from pagefunc import *
 from sample_data import sample_data
 from schema import extract, schema
-
+from query import query_url
 
 application = Flask(__name__, static_folder='build')
 
@@ -88,6 +88,14 @@ def get_grid():
     return jsonify(sample_data['text_assets'])
 
 
+@application.route(CONSTANTS['ENDPOINT']['JSON'])
+def get_json():
+    url = request.args.get('url')
+    parts = "url, description, feed"
+    result = jsonify(query_url(url, parts))
+    return result
+
+
 # Catching all routes
 # This route is used to serve all the routes in the frontend application after deployment.
 @application.route('/', defaults={'path': ''})
@@ -132,7 +140,7 @@ def json_page(url):
     tables.append(page_links(url))
     tables.append(page_info(url))
     result = get_all(url)
-    return jsonify(result)
+    return result
 
 
 @application.route('/page_links/<path:url>', methods=['GET', 'POST'])

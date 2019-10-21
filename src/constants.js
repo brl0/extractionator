@@ -20,4 +20,8 @@ CONSTANTS.ENDPOINT.LIST = "/api/list";
 
 CONSTANTS.ENDPOINT.MASTERDETAIL = "/api/masterdetail";
 
+CONSTANTS.ENDPOINT.JSON_LINKS = "/json_links/";
+CONSTANTS.ENDPOINT.JSON = "/api/json";
+
+
 export default CONSTANTS;

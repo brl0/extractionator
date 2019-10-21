@@ -12,5 +12,6 @@ CONSTANTS = {
         'LIST': '/api/list',
         'MASTER_DETAIL': '/api/masterdetail',
         'GRID': '/api/grid',
+        'JSON': '/api/json',
     }
 }

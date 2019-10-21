@@ -1,6 +1,7 @@
 ﻿import React from "react";
 import { Link } from "react-router-dom";
 import styles from "./navbar.module.css";
+import queryString from 'query-string';
 
 //TODO Web Template Studio: Add a new link in the NavBar for your page here.
 // A skip link is included as an accessibility best practice. For more information visit https://www.w3.org/WAI/WCAG21/Techniques/general/G1.
@@ -17,7 +18,7 @@ export default function NavBar() {
         <form>
           <label>
             URL 
-            <input type="text" name="url" />
+            <input type="text" name="url" defaultValue={queryString.parse(window.location.search).url} />
           </label>
           <input type="submit" value="Go" />
         </form>
