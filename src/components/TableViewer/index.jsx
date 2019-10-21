@@ -1,5 +1,6 @@
 ﻿import React, { Component } from "react";
 import CONSTANTS from "../../constants";
+import queryString from 'query-string';
 
 //https://medium.com/@zbzzn/integrating-react-and-datatables-not-as-hard-as-advertised-f3364f395dfa
 var $ = require("jquery");
@@ -17,12 +18,13 @@ export default class TableViewer extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      masterDetailText: []
+      details: []
     };
   }
 
   componentDidMount() {
-    fetch(CONSTANTS.ENDPOINT.MASTERDETAIL)
+    const values = queryString.parse(this.props.location.search);
+    fetch(CONSTANTS.ENDPOINT.JSON + "?url=" + encodeURI(values.url))
       .then(response => {
         if (!response.ok) {
           throw Error(response.statusText);
@@ -30,18 +32,21 @@ export default class TableViewer extends Component {
         return response.json();
       })
       .then(result => {
-        this.setState({ masterDetailText: result });
-
-        var cols = Object.keys(this.state.masterDetailText[0]);
+        this.setState({ details: result.website });
+        var cols = Object.keys(this.state.details);
         var table_cols = [];
         for (var key in cols) {
-          var col = { title: cols[key], data: cols[key] };
+          var col = { title: cols[key] };
           table_cols.push(col);
         }
-
+        var d = [];
+        for (var datakey in cols) {
+          d.push(this.state.details[cols[datakey]])
+        };
+        var dataset = [d];
         $(this.refs.main).DataTable({
           dom: '<"data-table-wrapper"t>',
-          data: this.state.masterDetailText,
+          data: dataset,
           columns: table_cols,
           ordering: true,
           paging: false,
