@@ -6,16 +6,17 @@ If the module has a command line interface then this
 file should be the entry point for that interface.
 """
 
+from collections import OrderedDict
 from pathlib import Path
+from pprint import pprint
 import sys
+
 import click
-try:
-    from pagefunc import *
-except:
-    from .pagefunc import *
 
-import requests
-
+from pagefunc import *
+from query import query_url
+from schema import extract
+from bripy.bllb.bllb_logging import DBG, logger, setup_logging
 
 @click.command(context_settings=dict(ignore_unknown_options=True, ))
 @click.option('-f',
@@ -44,9 +45,7 @@ def main(file, url, debug):
     """Console script for pagefunc."""
     # See click documentation at http://click.pocoo.org/
     if debug:
-        logger = set_loguru("DEBUG")
-    else:
-        logger = set_loguru("WARNING")
+        logger = setup_logging("DEBUG")
     urls = []
     urls.extend(url)
     if file is not None and len(file):
@@ -59,12 +58,12 @@ def main(file, url, debug):
         ctx = click.get_current_context()
         click.echo(ctx.get_help())
         ctx.exit()
-    app_url = 'http://127.0.0.1:5000/get_page/'
     for url in urls:
         print(url)
-        u = app_url + url
-        text = pagetext(u)
-        print(text)
+        output = extract(url)
+        print(type(output))
+        print(output.keys())
+        pprint(output)
     return 0
 
 

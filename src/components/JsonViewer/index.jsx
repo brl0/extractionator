@@ -1,5 +1,6 @@
 ﻿import React from "react";
 import CONSTANTS from "../../constants";
+import buildPost from "../../extractionator_util";
 import ReactJson from "react-json-view";
 import queryString from 'query-string';
 
@@ -8,16 +9,25 @@ export default class JsonViewer extends ReactJson {
     super(props);
 
     this.state = {
-      data: { field: "value" }
+      data: { field: "value" },
+      qs: queryString.parse(this.props.location.search),
     };
   }
 
   componentDidMount() {
-    const values = queryString.parse(this.props.location.search);
-    if (values.url) {
-      fetch(CONSTANTS.ENDPOINT.JSON + "?url=" + encodeURI(values.url))
-        .then(response => response.json())
-        .then(data => this.setState({ data }));
+    const url = this.state.qs.url;
+    console.log(url);
+    if (url && url !== 'undefined') {
+      var post = buildPost(url);
+      fetch(CONSTANTS.ENDPOINT.GRAPHQL, post)
+      .then(response => {
+        if (!response.ok) {
+          console.log(response);
+          //throw Error(response.statusText);
+        }
+        return response.json();
+      })
+      .then(data => this.setState({ data }));
     }
   }
 

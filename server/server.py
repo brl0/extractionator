@@ -1,7 +1,6 @@
 """
 Python HTTP server for GraphQL.
 """
-import os
 from os.path import exists, join
 
 from flask import (
@@ -15,6 +14,12 @@ from pagefunc import *
 from sample_data import sample_data
 from schema import extract, schema
 from query import query_url
+
+from bripy.bllb.bllb_logging import setup_logging
+
+LOG_LEVEL = "DEBUG"
+
+logger = setup_logging(LOG_LEVEL)
 
 application = Flask(__name__, static_folder='build')
 
@@ -90,9 +95,15 @@ def get_grid():
 
 @application.route(CONSTANTS['ENDPOINT']['JSON'])
 def get_json():
+    logger.debug(f'{request}')
     url = request.args.get('url')
-    parts = "url, description, feed"
-    result = jsonify(query_url(url, parts))
+    parts = request.args.get('parts')
+    if not parts:
+        parts = "url, title, feed, image"  #, description, text"
+    result = query_url(url, parts)
+    logger.debug(result)
+    result = jsonify(result)
+    logger.debug(result)
     return result
 
 

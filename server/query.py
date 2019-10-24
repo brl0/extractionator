@@ -1,8 +1,10 @@
 import pprint
 import schema
+import sys
 
+ALL_PARTS = "url, title, feed, image, description, text"
 
-def make_query(url, parts):
+def make_query(url, parts=ALL_PARTS):
     q = """
     {
       website (url: "URL" ) {
@@ -15,7 +17,7 @@ def make_query(url, parts):
     return q
 
 
-def query_url(url, parts):
+def query_url(url, parts=ALL_PARTS):
     q = make_query(url, parts)
     result = schema.schema.execute(q)
     if result.errors:
@@ -26,7 +28,10 @@ def query_url(url, parts):
     return result.data
 
 
-if __name__ == "__main__":
-    results = query_url("https://lethain.com/migrations/",
-    "url, title, image")
+def main(url="https://lethain.com/migrations/"):
+    results = query_url(url)
     pprint.pprint(results)
+    return 0
+
+if __name__ == "__main__":
+    sys.exit(main())

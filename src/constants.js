@@ -22,6 +22,6 @@ CONSTANTS.ENDPOINT.MASTERDETAIL = "/api/masterdetail";
 
 CONSTANTS.ENDPOINT.JSON_LINKS = "/json_links/";
 CONSTANTS.ENDPOINT.JSON = "/api/json";
-
+CONSTANTS.ENDPOINT.GRAPHQL = "/graphql";
 
 export default CONSTANTS;

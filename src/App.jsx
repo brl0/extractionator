@@ -8,6 +8,7 @@ import Footer from "./components/Footer";
 import Blank from "./components/Blank";
 import JsonViewer from "./components/JsonViewer";
 import TableViewer from "./components/TableViewer";
+import TableView2 from "./components/TableView2";
 import DetailViewer from "./components/DetailViewer";
 import DetailTable from "./components/DetailTable";
 import Grid from "./components/Grid";
@@ -24,6 +25,7 @@ class App extends Component {
           <Route path="/Blank" component={Blank} />
           <Route path="/JsonViewer" component={JsonViewer} />
           <Route path="/TableViewer" component={TableViewer} />
+          <Route path="/TableView2" component={TableView2} />
           <Route path="/DetailViewer" component={DetailViewer} />
           <Route path="/DetailTable" component={ DetailTable } />
           <Route path="/Grid" component={Grid} />

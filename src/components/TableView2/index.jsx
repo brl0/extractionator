@@ -26,7 +26,7 @@ export default class TableViewer extends Component {
   componentDidMount() {
     const url = this.state.qs.url;
     if (url && url !== 'undefined') {
-      fetch(CONSTANTS.ENDPOINT.JSON + "?url=" + encodeURI(url))
+      fetch(CONSTANTS.ENDPOINT.JSON + this.props.location.search)
         .then(response => {
           if (!response.ok) {
             throw Error(response.statusText);
@@ -35,17 +35,13 @@ export default class TableViewer extends Component {
         })
         .then(result => {
           this.setState({ details: result.website });
-          var cols = Object.keys(this.state.details);
-          var table_cols = [];
-          for (var key in cols) {
-            var col = { title: cols[key] };
-            table_cols.push(col);
-          };
-          var d = [];
-          for (var datakey in cols) {
-            d.push(this.state.details[cols[datakey]])
-          };
-          var dataset = [d];
+          var table_cols = [{title: "index"}, {title: "field"}, {title: "value"}];
+          var obj = this.state.details;
+          var fields = Object.keys(obj);
+          var dataset = [];
+          for (var field in fields) {
+            dataset.push([field, fields[field], obj[fields[field]]])
+          }
           $(this.refs.main).DataTable({
             dom: '<"data-table-wrapper"t>',
             data: dataset,
