@@ -1,6 +1,7 @@
 ﻿import React, { Component } from "react";
 import CONSTANTS from "../../constants";
 import queryString from 'query-string';
+import buildPost from "../../extractionator_util";
 
 //https://medium.com/@zbzzn/integrating-react-and-datatables-not-as-hard-as-advertised-f3364f395dfa
 var $ = require("jquery");
@@ -14,7 +15,7 @@ require( 'datatables.net-rowreorder-dt' );
 require( 'datatables.net-scroller-dt' );
 require( 'datatables.net-select-dt' );
 
-export default class TableViewer extends Component {
+export default class DataTable2 extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -25,8 +26,14 @@ export default class TableViewer extends Component {
 
   componentDidMount() {
     const url = this.state.qs.url;
+    var parts = undefined;
+    if (this.state.qs.parts) {
+      parts = `{${this.state.qs.parts}}`;
+    }
     if (url && url !== 'undefined') {
-      fetch(CONSTANTS.ENDPOINT.JSON + this.props.location.search)
+      const post = buildPost(url, parts);
+      const fetch_request = [CONSTANTS.ENDPOINT.GRAPHQL, post];
+      fetch(...fetch_request)
         .then(response => {
           if (!response.ok) {
             throw Error(response.statusText);
@@ -34,25 +41,52 @@ export default class TableViewer extends Component {
           return response.json();
         })
         .then(result => {
-          this.setState({ details: result.website });
-          var table_cols = [{title: "index"}, {title: "field"}, {title: "value"}];
-          var obj = this.state.details;
-          var fields = Object.keys(obj);
+          const data = result.data.website;
+          this.setState({ details: data });
+          const table_cols = [{title: "index"}, {title: "field"}, {title: "value"}];
+          const obj = this.state.details;
+          console.log(obj.description);
+          const fields = Object.keys(obj);
           var dataset = [];
-          for (var field in fields) {
-            dataset.push([field, fields[field], obj[fields[field]]])
+          var counter = 0;
+          for (var idx in fields) {
+            var item = obj[fields[idx]];
+            console.log(item.length);
+            console.log(typeof(item));
+            
+            if (item instanceof Array
+                && item.length >= 1 ) {
+              for (var it in item) {
+                dataset.push([
+                  counter, 
+                  fields[idx],
+                  item[it],
+                ]);
+                counter += 1;
+              }
+            }
+            else {
+              dataset.push([
+                counter, 
+                fields[idx],
+                item,
+              ]);
+              counter += 1;
+            }
           }
-          $(this.refs.main).DataTable({
-            dom: '<"data-table-wrapper"t>',
-            data: dataset,
-            columns: table_cols,
+          const table_opts = {
             ordering: true,
             paging: false,
-            scrollY: 400,
             select: true,
             colReorder: true,
             rowReorder: true,
             keys: true,
+          };
+          $(this.refs.main).DataTable({
+            dom: '<"data-table-wrapper"t>',
+            data: dataset,
+            columns: table_cols,
+            ...table_opts,
           });
         })
         .catch(error =>

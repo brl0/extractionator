@@ -39,11 +39,14 @@ export default function NavBar() {
           <Link className="nav-item nav-link active" to={get_link("/TableViewer")}>
             Table
           </Link>
-          <Link className="nav-item nav-link active" to={get_link("/TableView2")}>
-            Table2
+          <Link className="nav-item nav-link active" to={get_link("/DataTable")}>
+            DataTable
+          </Link>
+          <Link className="nav-item nav-link active" to={get_link("/DataTable2")}>
+            DataTable2
           </Link>
           <Link className="nav-item nav-link active" to="/DetailViewer">
-            DetailViewer
+            Detail
           </Link>
           <Link className="nav-item nav-link active" to="/DetailTable">
             DetailTable
@@ -52,7 +55,7 @@ export default function NavBar() {
             Grid
           </Link>
           <Link className="nav-item nav-link active" to="/Master_Detail">
-            Master_Detail
+            Master
           </Link>
           <Link className="nav-item nav-link active" to="/List">
             List

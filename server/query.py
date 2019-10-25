@@ -2,16 +2,10 @@ import pprint
 import schema
 import sys
 
-ALL_PARTS = "url, title, feed, image, description, text"
+ALL_PARTS = "url,title,feed,image,description,text,qs"
 
 def make_query(url, parts=ALL_PARTS):
-    q = """
-    {
-      website (url: "URL" ) {
-        PARTS
-      }
-    }
-    """
+    q = """{website(url:"URL"){PARTS}}"""
     q = q.replace("URL", url)
     q = q.replace("PARTS", parts)
     return q

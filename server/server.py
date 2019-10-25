@@ -1,12 +1,18 @@
 """
 Python HTTP server for GraphQL.
 """
+import json
 from os.path import exists, join
+from typing import Text
 
 from flask import (
     Flask, jsonify, make_response, render_template, request,
     send_from_directory, url_for)
 from flask_graphql import GraphQLView
+import spacy
+from textblob import TextBlob
+
+from bripy.bllb.bllb_logging import setup_logging
 
 from constants import CONSTANTS
 from data_table import data_table
@@ -15,7 +21,6 @@ from sample_data import sample_data
 from schema import extract, schema
 from query import query_url
 
-from bripy.bllb.bllb_logging import setup_logging
 
 LOG_LEVEL = "DEBUG"
 
@@ -23,6 +28,7 @@ logger = setup_logging(LOG_LEVEL)
 
 application = Flask(__name__, static_folder='build')
 
+nlp = spacy.load("en_core_web_lg")
 
 @application.route('/extract_page/<path:url>', methods=['GET', 'POST'])
 def extract_page(url):
@@ -30,7 +36,6 @@ def extract_page(url):
     return f"{url}\n{extracted.title}\n{extracted.description}"
 
 @application.route('/sampletable')
-@application.route('/api/sampletable')
 def get_table():
     return data_table(sample_data['text_assets'], 'sampletable', 'id')
 
@@ -126,6 +131,7 @@ application.add_url_rule('/graphql',
                  view_func=GraphQLView.as_view('graphql',
                                                schema=schema,
                                                graphiql=True))
+# application.add_url_rule('/graphql/batch', view_func=GraphQLView.as_view('graphql', schema=schema, batch=True))
 
 
 @application.route('/get_page/<path:url>', methods=['GET', 'POST'])
@@ -147,11 +153,19 @@ def get_page(url):
 
 @application.route('/json_page/<path:url>', methods=['GET', 'POST'])
 def json_page(url):
-    tables = []
-    tables.append(page_links(url))
-    tables.append(page_info(url))
     result = get_all(url)
-    return result
+    logger.debug(type(result))
+    safe = dict()
+    for key, value in result.items():
+        try:
+            json.dumps({key: value})
+        except Exception as error:
+            logger.warning(f"Error dumping {key} to JSON.\n"
+            f"Value: {value}\n"
+            f"Error: {error}")
+        else:
+            safe.update({key: value})
+    return json.dumps(safe)
 
 
 @application.route('/page_links/<path:url>', methods=['GET', 'POST'])
@@ -194,13 +208,25 @@ def page_info(url):
         tables = []
         tables.append({"name": "Info", "table": table_html})
         html = render_template('table.html', tables=tables)
-        import json
         j = json.loads(df.to_json(orient='split'))
-        from collections import OrderedDict
         j = j['data']
         j = dict(j)
         j = json.dumps(j, indent=4, sort_keys=False)
     return html
+
+
+@application.route('/text_info/<path:url>', methods=['GET', 'POST'])
+def text_info(url):
+    text = pagetext(url)
+    blob = TextBlob(text)
+    return json.dumps([str(word) for word in blob.noun_phrases])
+
+
+@application.route('/spacy_info/<path:url>', methods=['GET', 'POST'])
+def spacy_info(url):
+    text = pagetext(url)
+    doc = nlp(text)
+    return {entity.text: entity.label_ for entity in doc.ents}
 
 
 if __name__ == '__main__':
