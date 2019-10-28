@@ -1,8 +1,8 @@
 import requests
 from pprint import pprint
 
-query = {"query":"{website (url:\"https://google.com\") {url title}}"}
+query = {b"url=https://github.com/shirosaidev/stocksight"}
 
-r = requests.post('http://localhost:3001/graphql?', data=query)
+r = requests.post('http://localhost:3001//spacy_info', data=query)
 
 pprint(r.content)

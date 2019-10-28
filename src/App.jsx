@@ -5,11 +5,13 @@ import "./DataTables/datatables.min.css";
 import NavBar from "./components/NavBar";
 import Footer from "./components/Footer";
 
-import Blank from "./components/Blank";
+import Viewer from "./components/Blank";
 import JsonViewer from "./components/JsonViewer";
 import TableViewer from "./components/TableViewer";
 import DataTable from "./components/DataTable";
 import DataTable2 from "./components/DataTable2";
+import MuiTable from "./components/MuiTable";
+import RData from "./components/RData";
 import DetailViewer from "./components/DetailViewer";
 import DetailTable from "./components/DetailTable";
 import Grid from "./components/Grid";
@@ -22,12 +24,14 @@ class App extends Component {
       <React.Fragment>
         <NavBar />
         <Switch>
-          <Redirect exact path="/" to="/TableViewer" />
-          <Route path="/Blank" component={Blank} />
+          <Redirect exact path="/" to="/DataTable2" />
+          <Route path="/Blank" component={Viewer} />
           <Route path="/JsonViewer" component={JsonViewer} />
           <Route path="/TableViewer" component={TableViewer} />
           <Route path="/DataTable" component={DataTable} />
           <Route path="/DataTable2" component={DataTable2} />
+          <Route path="/MuiTable" component={MuiTable} />
+          <Route path="/RData" component={RData} />
           <Route path="/DetailViewer" component={DetailViewer} />
           <Route path="/DetailTable" component={ DetailTable } />
           <Route path="/Grid" component={Grid} />

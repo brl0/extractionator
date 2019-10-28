@@ -1,18 +1,22 @@
 """
 Python HTTP server for GraphQL.
 """
+
+from collections import OrderedDict
 import json
+from operator import itemgetter
 from os.path import exists, join
 from typing import Text
 
 from flask import (
     Flask, jsonify, make_response, render_template, request,
     send_from_directory, url_for)
+from flask_cors import CORS
 from flask_graphql import GraphQLView
 import spacy
 from textblob import TextBlob
 
-from bripy.bllb.bllb_logging import setup_logging
+from bripy.bllb.bllb_logging import setup_logging, get_dbg
 
 from constants import CONSTANTS
 from data_table import data_table
@@ -25,10 +29,12 @@ from query import query_url
 LOG_LEVEL = "DEBUG"
 
 logger = setup_logging(LOG_LEVEL)
+DBG = get_dbg(logger)
 
 application = Flask(__name__, static_folder='build')
+CORS(application)
 
-nlp = spacy.load("en_core_web_lg")
+#nlp = spacy.load("en_core_web_lg")
 
 @application.route('/extract_page/<path:url>', methods=['GET', 'POST'])
 def extract_page(url):
@@ -226,7 +232,13 @@ def text_info(url):
 def spacy_info(url):
     text = pagetext(url)
     doc = nlp(text)
-    return {entity.text: entity.label_ for entity in doc.ents}
+    result = {entity.text: entity.label_ for entity in doc.ents}
+    df = pd.DataFrame.from_dict(result, orient='index')
+    table = df.to_html(table_id='Spacy')
+    tables = []
+    tables.append({"name": "Spacy", "table": table})
+    output = render_template('table.html', tables=tables)
+    return output
 
 
 if __name__ == '__main__':

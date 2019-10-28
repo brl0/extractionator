@@ -45,6 +45,12 @@ export default function NavBar() {
           <Link className="nav-item nav-link active" to={get_link("/DataTable2")}>
             DataTable2
           </Link>
+          <Link className="nav-item nav-link active" to="/MuiTable">
+            MuiTable
+          </Link>
+          <Link className="nav-item nav-link active" to="/RData">
+            RData
+          </Link>
           <Link className="nav-item nav-link active" to="/DetailViewer">
             Detail
           </Link>
@@ -60,7 +66,7 @@ export default function NavBar() {
           <Link className="nav-item nav-link active" to="/List">
             List
           </Link>
-          <Link className="nav-item nav-link active" to="/Blank">
+          <Link className="nav-item nav-link active" to={get_link("/Blank")}>
             Blank
           </Link>
           </div>
