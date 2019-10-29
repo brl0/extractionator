@@ -3,7 +3,7 @@ import CONSTANTS from "../../constants";
 import MUIDataTable from "mui-datatables";
 import queryString from 'query-string';
 
-import buildPost from "../../extractionator_util";
+import buildPost, {buildQueries} from "../../extractionator_util";
 
 export default class MuiTable extends Component {
   constructor(props) {
@@ -22,7 +22,15 @@ export default class MuiTable extends Component {
       parts = `{${qs.parts}}`;
     }
     if (url && url !== 'undefined') {
-      const post = buildPost(url, parts);
+      const queries = buildQueries([
+        ['website', url, 'url,title,description'],
+        ['urlQuery', url, 'domain,tld'],
+      ]);
+      console.log("Queries:");
+      console.log(queries);
+      const post = buildPost(queries);
+      console.log("Post:")
+      console.log(post);
       const fetch_request = [CONSTANTS.ENDPOINT.GRAPHQL, post];
       fetch(...fetch_request)
         .then(response => {
@@ -32,35 +40,44 @@ export default class MuiTable extends Component {
           return response.json();
         })
         .then(result => {
-          const data = result.data.website;
-          const fields = Object.keys(data);
-          var dataset = [];
+          const subqs = Object.keys(result.data);
+          console.log(`subqs: ${subqs}`);
           var counter = 0;
-          for (var idx in fields) {
-            var item = data[fields[idx]];
-            if (item instanceof Array
-                && item.length >= 1 ) {
-              for (var it in item) {
+          var dataset = [];
+          for (var subq in subqs) {
+            console.log(`subq: ${subq}`);
+            var data = result.data[subqs[subq]];
+            console.log(`data: ${data}`);
+            var fields = Object.keys(data);
+            console.log(`fields: ${fields}`);
+            for (var idx in fields) {
+              var item = data[fields[idx]];
+              if (item instanceof Array
+                  && item.length >= 1 ) {
+                for (var it in item) {
+                  dataset.push([
+                    counter, 
+                    fields[idx],
+                    item[it],
+                  ]);
+                  counter += 1;
+                }
+              }
+              else {
                 dataset.push([
                   counter, 
                   fields[idx],
-                  item[it],
+                  item,
                 ]);
                 counter += 1;
               }
             }
-            else {
-              dataset.push([
-                counter, 
-                fields[idx],
-                item,
-              ]);
-              counter += 1;
-            }
           }
+          console.log("result.data:");
+          console.log(result.data);
           this.setState({
             dataset: dataset,
-            descriptions: data.description,
+            descriptions: result.data.website.description,
           });
         })
         .catch(error =>
@@ -75,7 +92,8 @@ export default class MuiTable extends Component {
   render() {
     const table_cols = ["index", "field", "value"];
     const options = {filterType: 'checkbox',};
-    const descs = this.state.descriptions.map(Array)
+    console.log(`this.state.descriptions: ${this.state.descriptions}`);
+    const descs = this.state.descriptions.map(Array);
     return (
       <div>
         <MUIDataTable

@@ -18,7 +18,7 @@ from bripy.bllb.bllb_nlp import get_sumy
 from bripy.bllb.bllb_parsers import HTML_Parser
 from bripy.ubrl.ubrl import URL
 
-from pagefunc import pagetext
+from pagefunc import pagehtml, pagetext
 
 nlp = None
 
@@ -50,9 +50,7 @@ class URLInterface(graphene.Interface):
 
 
 class PageContent(graphene.Interface):
-    class Meta:
-        interfaces = (URLInterface,)
-
+    html = graphene.String()
     text = graphene.String()
 
 
@@ -60,7 +58,7 @@ class Website(graphene.ObjectType):
     """Information extracted from a website."""
     class Meta:
         interfaces = (URLInterface,)
-    
+
     title = graphene.List(graphene.String)
     description = graphene.List(graphene.String)
     image = graphene.List(graphene.String)
@@ -96,7 +94,8 @@ class TextInfo(graphene.ObjectType):
 
     def resolve_summary(self, info):
         DBG("Resolving summary.")
-        summary = get_sumy(self.text, 3)
+        html = pagehtml(self.url)
+        summary = get_sumy(3, html, self.url)
         return summary
 
 

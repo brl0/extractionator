@@ -4,17 +4,28 @@ import MUIDataTable from "mui-datatables";
 import CONSTANTS from "constants";
 
 
-const getURLQuery = (url, fields) => `{website(url:"${url}") ${fields}}`;
+const getURLQuery = (qType, url, fields) => JSON.stringify(`${qType}(url:"${url}"){${fields}}`);
 
-const buildQuery = (url, fields) => `{"query": ${JSON.stringify(getURLQuery(url, fields))}}`;
+export function buildQueries(infoArrays) {
+  const subQueriesArray = infoArrays.map(buildQuery);
+  const subQueries = subQueriesArray.join();
+  const query = `{"query": "query {${subQueries}}"}`;
+  return query;
+}
+
+function buildQuery(qInfo) {
+  const [ qType, url, fields ] = qInfo;
+  const subQuery = getURLQuery(qType, url, fields).slice(1,-1);
+  return subQuery;
+}
 
 const default_fields = '{url,title,feed,image,description,text,qs,}';
 
-export default function buildPost(url, fields = default_fields) {
+export default function buildPost(queries) {
     return ({
     method: "POST",
     headers: {'Content-Type': 'application/json'},
-    body: `${buildQuery(url, fields)}`,
+    body: `${queries}`,
   });
 }
 

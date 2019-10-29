@@ -45,11 +45,8 @@ export default function NavBar() {
           <Link className="nav-item nav-link active" to={get_link("/DataTable2")}>
             DataTable2
           </Link>
-          <Link className="nav-item nav-link active" to="/MuiTable">
+          <Link className="nav-item nav-link active" to={get_link("/MuiTable")}>
             MuiTable
-          </Link>
-          <Link className="nav-item nav-link active" to="/RData">
-            RData
           </Link>
           <Link className="nav-item nav-link active" to="/DetailViewer">
             Detail
