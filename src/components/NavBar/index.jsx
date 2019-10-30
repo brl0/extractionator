@@ -40,19 +40,25 @@ export default function NavBar() {
             Table
           </Link>
           <Link className="nav-item nav-link active" to={get_link("/DataTable")}>
-            DataTable
+            Data
           </Link>
           <Link className="nav-item nav-link active" to={get_link("/DataTable2")}>
-            DataTable2
+            Data2
           </Link>
           <Link className="nav-item nav-link active" to={get_link("/MuiTable")}>
-            MuiTable
+            Mui
+          </Link>
+          <Link className="nav-item nav-link active" to={get_link("/Tabbed_Detail")}>
+            Tabbed
+          </Link>
+          <Link className="nav-item nav-link active" to={get_link("/Tabbed_Tables")}>
+            TabTable
           </Link>
           <Link className="nav-item nav-link active" to="/DetailViewer">
             Detail
           </Link>
           <Link className="nav-item nav-link active" to="/DetailTable">
-            DetailTable
+            DT
           </Link>
           <Link className="nav-item nav-link active" to="/Grid">
             Grid

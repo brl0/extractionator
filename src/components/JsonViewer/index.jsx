@@ -4,7 +4,7 @@ import queryString from 'query-string';
 
 import CONSTANTS from "../../constants";
 
-import buildPost, {buildQueries} from "../../extractionator_util";
+import buildPost, { buildQueries } from "../../extractionator_util";
 
 export default class JsonViewer extends ReactJson {
   constructor(props) {
@@ -20,15 +20,12 @@ export default class JsonViewer extends ReactJson {
     const url = this.state.qs.url;
     console.log(url);
     if (url && url !== 'undefined') {
-      const queries = buildQueries([
-        ['website', url, 'url,title,description'],
-        ['urlQuery', url, 'domain,tld'],
-      ]);
-      console.log("Queries:");
-      console.log(queries);
+      var queryInfo = [];
+      for (let [key, value] of Object.entries(CONSTANTS.TYPES)) {
+        queryInfo.push([key, value, url]);
+      }
+      const queries = buildQueries(queryInfo);
       const post = buildPost(queries);
-      console.log("Post:")
-      console.log(post);
       fetch(CONSTANTS.ENDPOINT.GRAPHQL, post)
       .then(response => {
         if (!response.ok) {

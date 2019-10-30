@@ -17,20 +17,12 @@ export default class MuiTable extends Component {
   componentDidMount() {
     const qs = queryString.parse(this.props.location.search);
     const url = qs.url;
-    var parts = undefined;
-    if (qs.parts) {
-      parts = `{${qs.parts}}`;
-    }
     if (url && url !== 'undefined') {
       const queries = buildQueries([
-        ['website', url, 'url,title,description'],
-        ['urlQuery', url, 'domain,tld'],
+        ['website', 'url,title,description', url],
+        ['urlQuery', 'domain,tld', url],
       ]);
-      console.log("Queries:");
-      console.log(queries);
       const post = buildPost(queries);
-      console.log("Post:")
-      console.log(post);
       const fetch_request = [CONSTANTS.ENDPOINT.GRAPHQL, post];
       fetch(...fetch_request)
         .then(response => {
@@ -41,15 +33,11 @@ export default class MuiTable extends Component {
         })
         .then(result => {
           const subqs = Object.keys(result.data);
-          console.log(`subqs: ${subqs}`);
           var counter = 0;
           var dataset = [];
           for (var subq in subqs) {
-            console.log(`subq: ${subq}`);
             var data = result.data[subqs[subq]];
-            console.log(`data: ${data}`);
             var fields = Object.keys(data);
-            console.log(`fields: ${fields}`);
             for (var idx in fields) {
               var item = data[fields[idx]];
               if (item instanceof Array
@@ -73,8 +61,6 @@ export default class MuiTable extends Component {
               }
             }
           }
-          console.log("result.data:");
-          console.log(result.data);
           this.setState({
             dataset: dataset,
             descriptions: result.data.website.description,
@@ -92,7 +78,6 @@ export default class MuiTable extends Component {
   render() {
     const table_cols = ["index", "field", "value"];
     const options = {filterType: 'checkbox',};
-    console.log(`this.state.descriptions: ${this.state.descriptions}`);
     const descs = this.state.descriptions.map(Array);
     return (
       <div>

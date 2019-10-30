@@ -11,6 +11,8 @@ import TableViewer from "./components/TableViewer";
 import DataTable from "./components/DataTable";
 import DataTable2 from "./components/DataTable2";
 import MuiTable from "./components/MuiTable";
+import Tabbed_Detail from "./components/Tabbed_Detail";
+import Tabbed_Tables from "./components/Tabbed_Tables";
 import DetailViewer from "./components/DetailViewer";
 import DetailTable from "./components/DetailTable";
 import Grid from "./components/Grid";
@@ -30,6 +32,8 @@ class App extends Component {
           <Route path="/DataTable" component={DataTable} />
           <Route path="/DataTable2" component={DataTable2} />
           <Route path="/MuiTable" component={MuiTable} />
+          <Route path="/Tabbed_Detail" component={Tabbed_Detail} />
+          <Route path="/Tabbed_Tables" component={Tabbed_Tables} />
           <Route path="/DetailViewer" component={DetailViewer} />
           <Route path="/DetailTable" component={ DetailTable } />
           <Route path="/Grid" component={Grid} />
