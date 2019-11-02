@@ -27,3 +27,37 @@ export function strArray(s) {
   return s.match(/([^"',]*(('[^']*')*||("[^"]*")*))+/gm);
 }
 
+export function objectToArray (obj){
+  const subqs = Object.keys(obj);
+  var counter = 0;
+  var dataset = [];
+  for (var subq in subqs) {
+    var data = obj[subqs[subq]];
+    var fields = Object.keys(data);
+    for (var idx in fields) {
+      var item = data[fields[idx]];
+      if (item instanceof Array
+          && item.length >= 1 ) {
+        for (var it in item) {
+          dataset.push([
+            counter, 
+            fields[idx],
+            item[it],
+          ]);
+          counter += 1;
+        }
+      }
+      else {
+        dataset.push([
+          counter, 
+          fields[idx],
+          item,
+        ]);
+        counter += 1;
+      }
+    }
+  }
+  console.log("Dataset:");
+  console.log(dataset);
+  return dataset;
+}

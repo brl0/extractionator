@@ -25,7 +25,7 @@ class App extends Component {
       <React.Fragment>
         <NavBar />
         <Switch>
-          <Redirect exact path="/" to="/DataTable2" />
+          <Redirect exact path="/" to="/Tabbed_Tables" />
           <Route path="/Blank" component={Viewer} />
           <Route path="/JsonViewer" component={JsonViewer} />
           <Route path="/TableViewer" component={TableViewer} />

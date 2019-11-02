@@ -12,7 +12,7 @@ export default function MasterDetailPage(props) {
     <div className="col">
       <div className={classnames("row", styles.heading)}>
         <div className="col">
-          <h3 className="ml-3 mb-4">{title}<p>{data.url}</p></h3>
+          <h3 className="ml-3 mb-4">Query type: {title}<p>URL: {data.url}</p></h3>
         </div>
       </div>
       <div className="row">

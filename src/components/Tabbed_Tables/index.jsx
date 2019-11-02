@@ -8,7 +8,7 @@ import MasterDetailSideBarTab from "./MasterDetailSideBarTab";
 import GreyAvatar from "../../images/GreyAvatar.svg";
 import styles from "./masterdetail.module.css";
 import CONSTANTS from "../../constants";
-import buildPost, { buildQueries } from "../../extractionator_util";
+import buildPost, { buildQueries, objectToArray } from "../../extractionator_util";
 
 export default class Tabbed_Detail extends Component {
   constructor(props) {

@@ -3,7 +3,8 @@ import CONSTANTS from "../../constants";
 import MUIDataTable from "mui-datatables";
 import queryString from 'query-string';
 
-import buildPost, {buildQueries} from "../../extractionator_util";
+import buildPost, {buildQueries, objectToArray} from "../../extractionator_util";
+
 
 export default class MuiTable extends Component {
   constructor(props) {
@@ -32,37 +33,10 @@ export default class MuiTable extends Component {
           return response.json();
         })
         .then(result => {
-          const subqs = Object.keys(result.data);
-          var counter = 0;
-          var dataset = [];
-          for (var subq in subqs) {
-            var data = result.data[subqs[subq]];
-            var fields = Object.keys(data);
-            for (var idx in fields) {
-              var item = data[fields[idx]];
-              if (item instanceof Array
-                  && item.length >= 1 ) {
-                for (var it in item) {
-                  dataset.push([
-                    counter, 
-                    fields[idx],
-                    item[it],
-                  ]);
-                  counter += 1;
-                }
-              }
-              else {
-                dataset.push([
-                  counter, 
-                  fields[idx],
-                  item,
-                ]);
-                counter += 1;
-              }
-            }
-          }
+          console.log("RESULT:");
+          console.log(result);
           this.setState({
-            dataset: dataset,
+            dataset: objectToArray(result.data),
             descriptions: result.data.website.description,
           });
         })
