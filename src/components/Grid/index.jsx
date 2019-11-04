@@ -1,16 +1,19 @@
 ﻿import React, { Component } from "react";
 import classnames from "classnames";
+import queryString from 'query-string';
+
 import GridComponent from "./GridComponent";
 import WarningMessage from "../WarningMessage";
-import GreyBox from "../../images/GreyBox.svg";
 import styles from "./grid.module.css";
 import CONSTANTS from "../../constants";
+import buildPost, {buildQueries} from "../../extractionator_util";
 
 export default class Grid extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      gridTextAssets: [{ description: "", header: "", id: 0 }],
+      images: [],
+      titles: [],
       WarningMessageOpen: false,
       WarningMessageText: ""
     };
@@ -20,20 +23,32 @@ export default class Grid extends Component {
 
   // Get the text sample data from the back end
   componentDidMount() {
-    fetch(CONSTANTS.ENDPOINT.GRID)
-      .then(response => {
-        if (!response.ok) {
-          throw Error(response.statusText);
-        }
-        return response.json();
-      })
-      .then(result => this.setState({ gridTextAssets: result }))
-      .catch(error =>
-        this.setState({
-          WarningMessageOpen: true,
-          WarningMessageText: `Request to get grid text failed: ${error}`
+    const qs = queryString.parse(this.props.location.search);
+    const url = qs.url;
+    if (url && url !== undefined) {
+      const queries = buildQueries([
+        ['website', 'image,title', url],
+      ]);
+      const post = buildPost(queries);
+      const fetch_request = [CONSTANTS.ENDPOINT.GRAPHQL, post];
+      fetch(...fetch_request)
+        .then(response => {
+          if (!response.ok) {
+            throw Error(response.statusText);
+          }
+          return response.json();
         })
-      );
+        .then(result => {
+          this.setState({ images: result.data.website.image,
+                          titles: result.data.website.title })
+        })
+        .catch(error =>
+          this.setState({
+            WarningMessageOpen: true,
+            WarningMessageText: `Request to get grid text failed: ${error}`
+          })
+        );
+      }
   }
 
   handleWarningClose() {
@@ -45,35 +60,34 @@ export default class Grid extends Component {
 
   render() {
     const {
-      gridTextAssets,
+      images,
+      titles,
       WarningMessageOpen,
       WarningMessageText
     } = this.state;
+    const qs = queryString.parse(this.props.location.search);
+    const url = qs.url;
+    var index = 0;
     return (
       <main id="mainContent">
         <div className={classnames("text-center", styles.header)}>
-          <h1>pageinfo</h1>
-          <p>This is placeholder text. Your web app description goes here.</p>
-          <a
-            href="https://github.com/Microsoft/WebTemplateStudio"
-            className="btn btn-primary my-2"
-          >
-            Link to our Github
-          </a>
+          <h1>Images</h1>
+          <p>{url}</p>
         </div>
 
         <div className="container">
-          <div className="row justify-content-center py-5">
-            <h1>Bootstrap Grid Template</h1>
-          </div>
+          {titles.map(title => (
+            <div className="row justify-content-center py-1">
+              <h1>{title}</h1>
+            </div>
+          ))}
 
           <div className="row justify-content-around text-center pb-5">
-            {gridTextAssets.map(textAssets => (
+            {images.map(image => (
               <GridComponent
-                key={textAssets.id}
-                header={textAssets.title}
-                description={textAssets.shortDescription}
-                image={GreyBox}
+                key={index++}
+                url={url}
+                image={image}
               />
             ))}
           </div>

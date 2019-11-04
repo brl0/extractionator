@@ -8,7 +8,9 @@ import MasterDetailSideBarTab from "./MasterDetailSideBarTab";
 import GreyAvatar from "../../images/GreyAvatar.svg";
 import styles from "./masterdetail.module.css";
 import CONSTANTS from "../../constants";
-import buildPost, { buildQueries, objectToArray } from "../../extractionator_util";
+import buildPost, { buildQueries, } from "../../extractionator_util";
+
+var Spinner = require('react-spinkit');
 
 export default class Tabbed_Detail extends Component {
   constructor(props) {
@@ -16,6 +18,7 @@ export default class Tabbed_Detail extends Component {
 
     this.state = {
       currentDisplayTabIndex: 0,
+      doneLoading: false,
       data: {
         "empty": 0,
     },
@@ -43,7 +46,8 @@ export default class Tabbed_Detail extends Component {
           return response.json();
         })
         .then(result => {
-          this.setState({ data: result.data });
+          this.setState({ data: result.data,
+                          doneLoading: true });
         })
         .catch(error =>
           this.setState({
@@ -71,10 +75,19 @@ export default class Tabbed_Detail extends Component {
     const {
       currentDisplayTabIndex,
       data,
+      doneLoading,
       WarningMessageOpen,
       WarningMessageText
     } = this.state;
     var index = 0;
+    if (!doneLoading) {
+      return (
+        <div className="row justify-content-center py-5" >
+          <Spinner name='pacman' />
+        </div>
+      );
+    }
+    else {
     return (
       <main id="mainContent">
         <div className="container-fluid">
@@ -99,10 +112,10 @@ export default class Tabbed_Detail extends Component {
                 }
               </div>
             </div>
-            <MasterDetailPage
+            <MasterDetailPage 
               data={data[Object.keys(data)[currentDisplayTabIndex]]}
               title={Object.keys(data)[currentDisplayTabIndex]}
-            />
+              />
           </div>
         </div>
         <WarningMessage
@@ -111,6 +124,6 @@ export default class Tabbed_Detail extends Component {
           onWarningClose={this.handleWarningClose}
         />
       </main>
-    );
+    );}
   }
 }

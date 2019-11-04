@@ -40,24 +40,20 @@ export function objectToArray (obj){
           && item.length >= 1 ) {
         for (var it in item) {
           dataset.push([
-            counter, 
+            counter++, 
             fields[idx],
             item[it],
           ]);
-          counter += 1;
         }
       }
-      else {
+      else if (JSON.stringify(item) !== '[]') {
         dataset.push([
-          counter, 
+          counter++, 
           fields[idx],
           item,
         ]);
-        counter += 1;
       }
     }
   }
-  console.log("Dataset:");
-  console.log(dataset);
   return dataset;
 }

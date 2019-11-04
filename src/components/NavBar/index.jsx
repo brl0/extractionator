@@ -36,15 +36,6 @@ export default function NavBar() {
           <Link className="nav-item nav-link active" to={get_link("/JsonViewer")}>
             Json
           </Link>
-          <Link className="nav-item nav-link active" to={get_link("/TableViewer")}>
-            Table
-          </Link>
-          <Link className="nav-item nav-link active" to={get_link("/DataTable")}>
-            Data
-          </Link>
-          <Link className="nav-item nav-link active" to={get_link("/DataTable2")}>
-            Data2
-          </Link>
           <Link className="nav-item nav-link active" to={get_link("/MuiTable")}>
             Mui
           </Link>
@@ -54,23 +45,11 @@ export default function NavBar() {
           <Link className="nav-item nav-link active" to={get_link("/Tabbed_Tables")}>
             TabTable
           </Link>
-          <Link className="nav-item nav-link active" to="/DetailViewer">
-            Detail
-          </Link>
-          <Link className="nav-item nav-link active" to="/DetailTable">
-            DT
-          </Link>
-          <Link className="nav-item nav-link active" to="/Grid">
+          <Link className="nav-item nav-link active" to={get_link("/Grid")}>
             Grid
-          </Link>
-          <Link className="nav-item nav-link active" to="/Master_Detail">
-            Master
           </Link>
           <Link className="nav-item nav-link active" to="/List">
             List
-          </Link>
-          <Link className="nav-item nav-link active" to={get_link("/Blank")}>
-            Blank
           </Link>
           </div>
       </nav>

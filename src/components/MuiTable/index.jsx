@@ -33,8 +33,6 @@ export default class MuiTable extends Component {
           return response.json();
         })
         .then(result => {
-          console.log("RESULT:");
-          console.log(result);
           this.setState({
             dataset: objectToArray(result.data),
             descriptions: result.data.website.description,
