@@ -3,8 +3,9 @@ import CONSTANTS from "../../constants";
 import MUIDataTable from "mui-datatables";
 import queryString from 'query-string';
 
-import buildPost, {buildQueries, objectToArray} from "../../extractionator_util";
+import buildPost, {buildQueries, objectToArray, indexArray} from "../../extractionator_util";
 
+var Spinner = require('react-spinkit');
 
 export default class MuiTable extends Component {
   constructor(props) {
@@ -12,6 +13,7 @@ export default class MuiTable extends Component {
     this.state = {
       dataset: [],
       descriptions: [],
+      links: [],
     };
   }
 
@@ -22,6 +24,7 @@ export default class MuiTable extends Component {
       const queries = buildQueries([
         ['website', 'url,title,description', url],
         ['urlQuery', 'domain,tld', url],
+        ['links', 'links', url],
       ]);
       const post = buildPost(queries);
       const fetch_request = [CONSTANTS.ENDPOINT.GRAPHQL, post];
@@ -36,6 +39,7 @@ export default class MuiTable extends Component {
           this.setState({
             dataset: objectToArray(result.data),
             descriptions: result.data.website.description,
+            links: result.data.links.links,
           });
         })
         .catch(error =>
@@ -50,22 +54,38 @@ export default class MuiTable extends Component {
   render() {
     const table_cols = ["index", "field", "value"];
     const options = {filterType: 'checkbox',};
-    const descs = this.state.descriptions.map(Array);
-    return (
-      <div>
-        <MUIDataTable
-          title="MUIDataTable"
-          data={this.state.dataset}
-          columns={table_cols}
-          options={options}
-        />
-        <MUIDataTable
-          title="Descriptions"
-          data={descs}
-          columns={['Description']}
-          options={options}
-        />
-      </div>
-    );
+    const descs = indexArray(this.state.descriptions.map(Array));
+    var links = indexArray(this.state.links);
+    if (!this.state.dataset.length) {
+      return (
+        <div className="row justify-content-center px-5 py-5" >
+          <Spinner name='pacman' />
+        </div>
+      )
+    }
+    else {
+      return (
+        <div>
+          <MUIDataTable
+            title="MUIDataTable"
+            data={this.state.dataset}
+            columns={table_cols}
+            options={options}
+          />
+          <MUIDataTable
+            title="Links"
+            data={links}
+            columns={['Index', 'Text', 'Link']}
+            options={options}
+          />
+          <MUIDataTable
+            title="Descriptions"
+            data={descs}
+            columns={['Index', 'Description']}
+            options={options}
+          />
+        </div>
+      );
+    }
   }
 }

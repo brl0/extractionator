@@ -30,7 +30,7 @@ export default class JsonViewer extends ReactJson {
       .then(response => {
         if (!response.ok) {
           console.log(response);
-          //throw Error(response.statusText);
+          throw Error(response.statusText);
         }
         return response.json();
       })

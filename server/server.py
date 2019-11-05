@@ -2,24 +2,19 @@
 Python HTTP server for GraphQL.
 """
 
-from collections import OrderedDict
 import json
-from operator import itemgetter
 from os.path import exists, join
-from typing import Text
 
 from flask import (
     Flask, jsonify, make_response, render_template, request,
     send_from_directory, url_for)
 from flask_cors import CORS
 from flask_graphql import GraphQLView
-import spacy
 from textblob import TextBlob
 
 from bripy.bllb.bllb_logging import setup_logging, get_dbg
 
 from constants import CONSTANTS
-from data_table import data_table
 from pagefunc import *
 from sample_data import sample_data
 from schema import extract, schema
@@ -34,16 +29,10 @@ DBG = get_dbg(logger)
 application = Flask(__name__, static_folder='build')
 CORS(application)
 
-#nlp = spacy.load("en_core_web_lg")
-
 @application.route('/extract_page/<path:url>', methods=['GET', 'POST'])
 def extract_page(url):
     extracted = extract(url)
-    return f"{url}\n{extracted.title}\n{extracted.description}"
-
-@application.route('/sampletable')
-def get_table():
-    return data_table(sample_data['text_assets'], 'sampletable', 'id')
+    return f"{url}\n\n{extracted['titles']}\n\n{extracted['descriptions']}"
 
 
 # List Endpoints
@@ -92,25 +81,13 @@ def delete_list_item(id):
     return jsonify({'_id': id, 'text': 'This comment was deleted'})
 
 
-# MasterDetail Page Endpoint
-@application.route(CONSTANTS['ENDPOINT']['MASTER_DETAIL'])
-def get_master_detail():
-    return jsonify(sample_data['text_assets'])
-
-
-# Grid Page Endpoint
-@application.route(CONSTANTS['ENDPOINT']['GRID'])
-def get_grid():
-    return jsonify(sample_data['text_assets'])
-
-
 @application.route(CONSTANTS['ENDPOINT']['JSON'])
 def get_json():
     logger.debug(f'{request}')
     url = request.args.get('url')
     parts = request.args.get('parts')
     if not parts:
-        parts = "url, title, feed, image"  #, description, text"
+        parts = "url,title,feed,image,description,text"
     result = query_url(url, parts)
     logger.debug(result)
     result = jsonify(result)
@@ -226,19 +203,6 @@ def text_info(url):
     text = pagetext(url)
     blob = TextBlob(text)
     return json.dumps([str(word) for word in blob.noun_phrases])
-
-
-@application.route('/spacy_info/<path:url>', methods=['GET', 'POST'])
-def spacy_info(url):
-    text = pagetext(url)
-    doc = nlp(text)
-    result = {entity.text: entity.label_ for entity in doc.ents}
-    df = pd.DataFrame.from_dict(result, orient='index')
-    table = df.to_html(table_id='Spacy')
-    tables = []
-    tables.append({"name": "Spacy", "table": table})
-    output = render_template('table.html', tables=tables)
-    return output
 
 
 if __name__ == '__main__':

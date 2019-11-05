@@ -4,8 +4,10 @@ GraphQL schema for extracting results from a website.
 
 from collections import defaultdict
 from html import escape
+from urllib.parse import urljoin
 
 from boltons import urlutils
+from bs4 import BeautifulSoup
 from extraction import DictExtractor as Extractor
 from extraction.techniques import Technique
 import graphene
@@ -18,7 +20,7 @@ from bripy.bllb.bllb_nlp import get_sumy
 from bripy.bllb.bllb_parsers import HTML_Parser
 from bripy.ubrl.ubrl import URL
 
-from pagefunc import pagehtml, pagetext
+from pagefunc import pagehtml, pagetext, get_links
 
 nlp = None
 
@@ -67,6 +69,21 @@ class Website(graphene.ObjectType):
     qs = graphene.List(graphene.List(graphene.String))
 
 
+class Links(graphene.ObjectType):
+    """Links extracted from a website."""
+    class Meta:
+        interfaces = (URLInterface,)
+
+    links = graphene.List(graphene.List(graphene.String))
+    
+    def resolve_links(self, info):
+        html = pagehtml(self.url)
+        soup = BeautifulSoup(html, 'lxml')
+        links = get_links(self.url, soup)
+        links = [[link['Text'], link['Url']] for link in links]
+        return links
+
+
 class URL_Class(graphene.ObjectType):
     """Information from parsed URL."""
     class Meta:
@@ -79,24 +96,46 @@ class TextInfo(graphene.ObjectType):
         interfaces = (PageContent,URLInterface,)
 
     links = graphene.List(graphene.String)
-    sentiment = graphene.List(graphene.Float)
+    polarity = graphene.Float()
+    subjectivity = graphene.Float()
     summary = graphene.String()
+    summary_polarity = graphene.Float()
+    summary_subjectivity = graphene.Float()
 
     def resolve_links(self, info):
         for link in urlutils.find_all_links(self.text):
             DBG(f'Found link: {link}')
             yield link
 
-    def resolve_sentiment(self, info):
-        DBG("Resolving sentiment.")
+    def resolve_polarity(self, info):
+        DBG("Resolving polarity.")
         blob = TextBlob(self.text)
-        return blob.sentiment
+        return blob.sentiment.polarity
+
+    def resolve_subjectivity(self, info):
+        DBG("Resolving subjectivity.")
+        blob = TextBlob(self.text)
+        return blob.sentiment.subjectivity
 
     def resolve_summary(self, info):
         DBG("Resolving summary.")
         html = pagehtml(self.url)
         summary = get_sumy(3, html, self.url)
         return summary
+
+    def resolve_summary_polarity(self, info):
+        DBG("resolve_summary_polarity")
+        html = pagehtml(self.url)
+        summary = get_sumy(3, html, self.url)
+        blob = TextBlob(summary)
+        return blob.sentiment.polarity
+
+    def resolve_summary_subjectivity(self, info):
+        DBG("resolve_summary_subjectivity")
+        html = pagehtml(self.url)
+        summary = get_sumy(3, html, self.url)
+        blob = TextBlob(summary)
+        return blob.sentiment.subjectivity
 
 
 class NLPInfo(graphene.ObjectType):
@@ -112,6 +151,7 @@ class Query(graphene.ObjectType):
     url_query = graphene.Field(URL_Class, url=graphene.String())
     text_info = graphene.Field(TextInfo, url=graphene.String())
     nlp_info = graphene.Field(NLPInfo, url=graphene.String())
+    links = graphene.Field(Links, url=graphene.String())
 
     def resolve_website(self, info, url):
         extracted = defaultdict(list, extract(url))
@@ -158,5 +198,11 @@ class Query(graphene.ObjectType):
             text=escape(text),
             objects=objects.items(),
         )
+
+    def resolve_links(self, info, url):
+        return Links(
+            url=url,
+        )
+
 
 schema = graphene.Schema(query=Query)

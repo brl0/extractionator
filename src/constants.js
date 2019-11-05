@@ -26,14 +26,16 @@ CONSTANTS.ENDPOINT.GRAPHQL = "/graphql";
 
 const websiteFields = 'url,title,feed,image,description,text,qs';
 const urlQueryFields = 'url,qs,ext,domain,tld,check,qp';
-const textInfoFields = 'url,sentiment,links,summary,text';
+const textInfoFields = 'url,links,summary,text';
 const nlpInfoFields = 'url,objects';
+const linksFields = 'url,links';
 
 CONSTANTS.TYPES = {
   'website': websiteFields,
   'urlQuery': urlQueryFields,
   'textInfo': textInfoFields,
   'nlpInfo': nlpInfoFields,
+  'links': linksFields,
 };
 
 export default CONSTANTS;

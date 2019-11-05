@@ -37,6 +37,7 @@ export default class Tabbed_Detail extends Component {
         queryInfo.push([key, value, url]);
       }
       const queries = buildQueries(queryInfo);
+      console.log(queries);
       const post = buildPost(queries);
       fetch(CONSTANTS.ENDPOINT.GRAPHQL, post)
         .then(response => {

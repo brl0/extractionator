@@ -27,7 +27,7 @@ export function strArray(s) {
   return s.match(/([^"',]*(('[^']*')*||("[^"]*")*))+/gm);
 }
 
-export function objectToArray (obj){
+export function objectToArray (obj) {
   const subqs = Object.keys(obj);
   var counter = 0;
   var dataset = [];
@@ -56,4 +56,12 @@ export function objectToArray (obj){
     }
   }
   return dataset;
+}
+
+export function indexArray (a) {
+  var results = [];
+  for (var i in a) {
+    results.push([i, ...a[i]]);
+  }
+  return results;
 }
