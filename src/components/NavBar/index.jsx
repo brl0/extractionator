@@ -27,7 +27,7 @@ export default function NavBar() {
         </Link>
         <form>
           <label>
-            URL 
+            URL
             <input type="text" name="url" defaultValue={url} />
           </label>
           <input type="submit" value="Go" />
@@ -35,6 +35,9 @@ export default function NavBar() {
         <div className="navbar-nav">
           <Link className="nav-item nav-link active" to={get_link("/JsonViewer")}>
             Json
+          </Link>
+          <Link className="nav-item nav-link active" to={get_link("/HTMLContentViewer")}>
+            HTML
           </Link>
           <Link className="nav-item nav-link active" to={get_link("/MuiTable")}>
             Mui

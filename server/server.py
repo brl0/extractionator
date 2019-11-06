@@ -107,7 +107,7 @@ def catch_all(path):
 @application.errorhandler(404)
 def page_not_found(error):
     json_response = jsonify({'error': 'Page not found'})
-    return make_response(json_response, 
+    return make_response(json_response,
                          CONSTANTS['HTTP_STATUS']['404_NOT_FOUND'])
 
 application.add_url_rule('/graphql',
@@ -195,7 +195,7 @@ def page_info(url):
         j = j['data']
         j = dict(j)
         j = json.dumps(j, indent=4, sort_keys=False)
-    return html
+        return html
 
 
 @application.route('/text_info/<path:url>', methods=['GET', 'POST'])

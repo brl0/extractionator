@@ -20,7 +20,7 @@ from bripy.bllb.bllb_nlp import get_sumy
 from bripy.bllb.bllb_parsers import HTML_Parser
 from bripy.ubrl.ubrl import URL
 
-from pagefunc import pagehtml, pagetext, get_links
+from pagefunc import pagehtml, pagetext, get_links, get_info
 
 nlp = None
 
@@ -75,7 +75,7 @@ class Links(graphene.ObjectType):
         interfaces = (URLInterface,)
 
     links = graphene.List(graphene.List(graphene.String))
-    
+
     def resolve_links(self, info):
         html = pagehtml(self.url)
         soup = BeautifulSoup(html, 'lxml')
@@ -146,12 +146,37 @@ class NLPInfo(graphene.ObjectType):
     objects = graphene.List(graphene.String)
 
 
+class RequestInfo(graphene.ObjectType):
+    """HTTP header and status information."""
+    class Meta:
+        interfaces = (URLInterface,)
+
+    request_info = graphene.List(graphene.List(graphene.String))
+
+    def resolve_request_info(self, info):
+        DBG("Resolving request info.")
+        r = requests.get(self.url)
+        return [*get_info(r).items()]
+
+
+class HTMLContent(graphene.ObjectType):
+    """HTML content from website."""
+    class Meta:
+        interfaces = (PageContent, URLInterface,)
+
+    html = graphene.String()
+
+    def resolve_html(self, info):
+        return pagehtml(self.url)
+
 class Query(graphene.ObjectType):
     website = graphene.Field(Website, url=graphene.String())
     url_query = graphene.Field(URL_Class, url=graphene.String())
     text_info = graphene.Field(TextInfo, url=graphene.String())
     nlp_info = graphene.Field(NLPInfo, url=graphene.String())
     links = graphene.Field(Links, url=graphene.String())
+    request_info = graphene.Field(RequestInfo, url=graphene.String())
+    html_content = graphene.Field(HTMLContent, url=graphene.String())
 
     def resolve_website(self, info, url):
         extracted = defaultdict(list, extract(url))
@@ -201,6 +226,16 @@ class Query(graphene.ObjectType):
 
     def resolve_links(self, info, url):
         return Links(
+            url=url,
+        )
+
+    def resolve_request_info(self, info, url):
+        return RequestInfo(
+            url=url,
+        )
+
+    def resolve_html_content(self, info, url):
+        return RequestInfo(
             url=url,
         )
 

@@ -3,17 +3,18 @@ import CONSTANTS from "../../constants";
 import MUIDataTable from "mui-datatables";
 import queryString from 'query-string';
 
-import buildPost, {buildQueries, objectToArray, indexArray} from "../../extractionator_util";
+import buildPost, { buildQueries, objectToArray, indexArray } from "../../extractionator_util";
 
 var Spinner = require('react-spinkit');
 
 export default class MuiTable extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props);
     this.state = {
       dataset: [],
       descriptions: [],
       links: [],
+      requestInfo: [],
     };
   }
 
@@ -25,6 +26,7 @@ export default class MuiTable extends Component {
         ['website', 'url,title,description', url],
         ['urlQuery', 'domain,tld', url],
         ['links', 'links', url],
+        ['requestInfo', 'requestInfo', url],
       ]);
       const post = buildPost(queries);
       const fetch_request = [CONSTANTS.ENDPOINT.GRAPHQL, post];
@@ -40,6 +42,7 @@ export default class MuiTable extends Component {
             dataset: objectToArray(result.data),
             descriptions: result.data.website.description,
             links: result.data.links.links,
+            requestInfo: result.data.requestInfo.requestInfo,
           });
         })
         .catch(error =>
@@ -52,9 +55,10 @@ export default class MuiTable extends Component {
   }
 
   render() {
-    const table_cols = ["index", "field", "value"];
-    const options = {filterType: 'checkbox',};
+    const tableCols = ["index", "field", "value"];
+    const options = { filterType: 'checkbox', };
     const descs = indexArray(this.state.descriptions.map(Array));
+    const requestInfo = indexArray(this.state.requestInfo)
     var links = indexArray(this.state.links);
     if (!this.state.dataset.length) {
       return (
@@ -68,21 +72,27 @@ export default class MuiTable extends Component {
         <div>
           <MUIDataTable
             title="MUIDataTable"
-            data={this.state.dataset}
-            columns={table_cols}
-            options={options}
+            data={ this.state.dataset }
+            columns={ tableCols }
+            options={ options }
           />
           <MUIDataTable
             title="Links"
-            data={links}
-            columns={['Index', 'Text', 'Link']}
-            options={options}
+            data={ links }
+            columns={ ['Index', 'Text', 'Link'] }
+            options={ options }
           />
           <MUIDataTable
             title="Descriptions"
-            data={descs}
-            columns={['Index', 'Description']}
-            options={options}
+            data={ descs }
+            columns={ ['Index', 'Description'] }
+            options={ options }
+          />
+          <MUIDataTable
+            title="RequestInfo"
+            data={ requestInfo }
+            columns={ ['Index', 'Field', 'Value'] }
+            options={ options }
           />
         </div>
       );

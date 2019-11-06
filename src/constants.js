@@ -29,6 +29,7 @@ const urlQueryFields = 'url,qs,ext,domain,tld,check,qp';
 const textInfoFields = 'url,links,summary,text';
 const nlpInfoFields = 'url,objects';
 const linksFields = 'url,links';
+const requestInfoFields = 'url,requestInfo';
 
 CONSTANTS.TYPES = {
   'website': websiteFields,
@@ -36,6 +37,7 @@ CONSTANTS.TYPES = {
   'textInfo': textInfoFields,
   'nlpInfo': nlpInfoFields,
   'links': linksFields,
+  'requestInfo': requestInfoFields,
 };
 
 export default CONSTANTS;
