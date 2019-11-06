@@ -5,6 +5,7 @@ import NavBar from "./components/NavBar";
 import Footer from "./components/Footer";
 import JsonViewer from "./components/JsonViewer";
 import HTMLViewer from "./components/HTMLContent";
+import TextViewer from "./components/TextContent";
 import MuiTable from "./components/MuiTable";
 import Tabbed_Detail from "./components/Tabbed_Detail";
 import Tabbed_Tables from "./components/Tabbed_Tables";
@@ -20,6 +21,7 @@ class App extends Component {
           <Redirect exact path="/" to="/Tabbed_Tables" />
           <Route path="/JsonViewer" component={JsonViewer} />
           <Route path="/HTMLContent" component={HTMLViewer} />
+          <Route path="/TextContent" component={TextViewer} />
           <Route path="/MuiTable" component={MuiTable} />
           <Route path="/Tabbed_Detail" component={Tabbed_Detail} />
           <Route path="/Tabbed_Tables" component={Tabbed_Tables} />
