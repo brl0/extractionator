@@ -6,7 +6,7 @@ import CONSTANTS from "../../constants";
 
 import buildPost, { buildQueries } from "../../extractionator_util";
 
-export default class HTMLContentViewer extends ReactJson {
+export default class HTMLViewer extends ReactJson {
   constructor(props) {
     super(props);
 
@@ -18,9 +18,8 @@ export default class HTMLContentViewer extends ReactJson {
 
   componentDidMount() {
     const url = this.state.qs.url;
-    console.log(url);
     if (url && url !== 'undefined') {
-      var queryInfo = ['htmlContent', 'html', url];
+      var queryInfo = [['htmlContent', 'html', url]];
       const queries = buildQueries(queryInfo);
       const post = buildPost(queries);
       fetch(CONSTANTS.ENDPOINT.GRAPHQL, post)
@@ -31,15 +30,21 @@ export default class HTMLContentViewer extends ReactJson {
         }
         return response.json();
       })
-      .then(data => this.setState({ data }));
+      .then(data => {
+        const content = data.data.htmlContent.html;
+        this.setState({ data: content })
+      });
     }
   }
 
   render() {
     const { data } = this.state;
+    const html = {__html: data};
     return (
       <main id="mainContent">
-
+        <hr />
+        <div dangerouslySetInnerHTML={html} />
+        <hr />
       </main>
     );
   }

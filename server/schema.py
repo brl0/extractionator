@@ -167,7 +167,10 @@ class HTMLContent(graphene.ObjectType):
     html = graphene.String()
 
     def resolve_html(self, info):
-        return pagehtml(self.url)
+        DBG("Resolving HTML.")
+        html = pagehtml(self.url)
+        DBG(f'HTML length: {len(html)}')
+        return html
 
 class Query(graphene.ObjectType):
     website = graphene.Field(Website, url=graphene.String())

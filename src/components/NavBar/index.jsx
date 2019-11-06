@@ -36,7 +36,7 @@ export default function NavBar() {
           <Link className="nav-item nav-link active" to={get_link("/JsonViewer")}>
             Json
           </Link>
-          <Link className="nav-item nav-link active" to={get_link("/HTMLContentViewer")}>
+          <Link className="nav-item nav-link active" to={get_link("/HTMLContent")}>
             HTML
           </Link>
           <Link className="nav-item nav-link active" to={get_link("/MuiTable")}>
