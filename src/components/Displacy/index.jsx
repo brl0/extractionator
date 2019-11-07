@@ -5,7 +5,7 @@ import CONSTANTS from "../../constants";
 
 import buildPost, { buildQueries } from "../../extractionator_util";
 
-export default class HTMLViewer extends Component {
+export default class DisplacyViewer extends Component {
   constructor(props) {
     super(props);
 
@@ -18,7 +18,7 @@ export default class HTMLViewer extends Component {
   componentDidMount() {
     const url = this.state.qs.url;
     if (url && url !== 'undefined') {
-      var queryInfo = [['htmlContent', 'html', url]];
+      var queryInfo = [['nlpInfo', 'displacyMarkup', url]];
       const queries = buildQueries(queryInfo);
       const post = buildPost(queries);
       fetch(CONSTANTS.ENDPOINT.GRAPHQL, post)
@@ -30,7 +30,7 @@ export default class HTMLViewer extends Component {
         return response.json();
       })
       .then(data => {
-        const content = data.data.htmlContent.html;
+        const content = data.data.nlpInfo.displacyMarkup;
         this.setState({ data: content });
       });
     }
@@ -38,7 +38,7 @@ export default class HTMLViewer extends Component {
 
   render() {
     const { data } = this.state;
-    const html = {__html: data};
+    const html = { __html: data };
     return (
       <main id="mainContent">
         <hr />

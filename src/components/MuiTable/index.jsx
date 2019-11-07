@@ -15,6 +15,8 @@ export default class MuiTable extends Component {
       descriptions: [],
       links: [],
       requestInfo: [],
+      tagCols: [],
+      tagData: [],
     };
   }
 
@@ -27,6 +29,7 @@ export default class MuiTable extends Component {
         ['urlQuery', 'domain,tld', url],
         ['links', 'links', url],
         ['requestInfo', 'requestInfo', url],
+        ['tagInfo', 'tagCols,tagData', url],
       ]);
       const post = buildPost(queries);
       const fetch_request = [CONSTANTS.ENDPOINT.GRAPHQL, post];
@@ -43,6 +46,8 @@ export default class MuiTable extends Component {
             descriptions: result.data.website.description,
             links: result.data.links.links,
             requestInfo: result.data.requestInfo.requestInfo,
+            tagCols: result.data.tagInfo.tagCols,
+            tagData: result.data.tagInfo.tagData,
           });
         })
         .catch(error =>
@@ -55,11 +60,14 @@ export default class MuiTable extends Component {
   }
 
   render() {
-    const tableCols = ["index", "field", "value"];
-    const options = { filterType: 'checkbox', };
     const descs = indexArray(this.state.descriptions.map(Array));
     const requestInfo = indexArray(this.state.requestInfo)
-    var links = indexArray(this.state.links);
+    const links = indexArray(this.state.links);
+    var tagCols = ['Index'];
+    tagCols.push(...this.state.tagCols);
+    const tagData = indexArray(this.state.tagData);
+    const tableCols = ["index", "field", "value"];
+    const options = { filterType: 'checkbox', };
     if (!this.state.dataset.length) {
       return (
         <div className="row justify-content-center px-5 py-5" >
@@ -94,6 +102,13 @@ export default class MuiTable extends Component {
             columns={ ['Index', 'Field', 'Value'] }
             options={ options }
           />
+          <MUIDataTable
+            title="Meta Tags"
+            data={tagData}
+            columns={tagCols}
+            options={options}
+          />
+
         </div>
       );
     }

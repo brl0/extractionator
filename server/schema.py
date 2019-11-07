@@ -11,8 +11,10 @@ from bs4 import BeautifulSoup
 from extraction import DictExtractor as Extractor
 from extraction.techniques import Technique
 import graphene
+import pandas as pd
 import requests
 import spacy
+from spacy import displacy
 from textblob import TextBlob
 
 from bripy.bllb.bllb_logging import logger, DBG
@@ -144,6 +146,7 @@ class NLPInfo(graphene.ObjectType):
         interfaces = (PageContent,URLInterface,)
 
     objects = graphene.List(graphene.String)
+    displacy_markup = graphene.String()
 
 
 class RequestInfo(graphene.ObjectType):
@@ -157,6 +160,15 @@ class RequestInfo(graphene.ObjectType):
         DBG("Resolving request info.")
         r = requests.get(self.url)
         return [*get_info(r).items()]
+
+
+class TagInfo(graphene.ObjectType):
+    """Meta tag information."""
+    class Meta:
+        interfaces = (URLInterface,)
+
+    tag_cols = graphene.List(graphene.String)
+    tag_data = graphene.List(graphene.List(graphene.String))
 
 
 class HTMLContent(graphene.ObjectType):
@@ -180,6 +192,7 @@ class Query(graphene.ObjectType):
     links = graphene.Field(Links, url=graphene.String())
     request_info = graphene.Field(RequestInfo, url=graphene.String())
     html_content = graphene.Field(HTMLContent, url=graphene.String())
+    tag_info = graphene.Field(TagInfo, url=graphene.String())
 
     def resolve_website(self, info, url):
         extracted = defaultdict(list, extract(url))
@@ -221,10 +234,12 @@ class Query(graphene.ObjectType):
             DBG("Done loading NLP model.")
         doc = nlp(text)
         objects = {entity.text.strip(): entity.label_ for entity in doc.ents}
+        displacy_markup = displacy.render(doc, style="ent")
         return NLPInfo(
             url=url,
             text=escape(text),
             objects=objects.items(),
+            displacy_markup=displacy_markup,
         )
 
     def resolve_links(self, info, url):
@@ -238,8 +253,23 @@ class Query(graphene.ObjectType):
         )
 
     def resolve_html_content(self, info, url):
-        return RequestInfo(
+        return HTMLContent(
             url=url,
+        )
+
+    def resolve_tag_info(self, info, url):
+        DBG("Resolving meta tag info.")
+        r = requests.get(url)
+        html = r.content
+        soup = BeautifulSoup(html, 'lxml')
+        meta = soup.find_all('meta')
+        df = pd.DataFrame([m.attrs for m in meta]).fillna('')
+        tag_cols = df.columns
+        tag_data = df.values
+        return TagInfo(
+            url=url,
+            tag_cols=tag_cols,
+            tag_data=tag_data,
         )
 
 

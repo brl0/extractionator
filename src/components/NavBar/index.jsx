@@ -42,6 +42,9 @@ export default function NavBar() {
           <Link className="nav-item nav-link active" to={get_link("/TextContent")}>
             Text
           </Link>
+          <Link className="nav-item nav-link active" to={get_link("/Displacy")}>
+            Displacy
+          </Link>
           <Link className="nav-item nav-link active" to={get_link("/MuiTable")}>
             Mui
           </Link>
