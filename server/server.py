@@ -7,18 +7,16 @@ from os.path import exists, join
 import sys
 
 from flask import (
-    Flask, jsonify, make_response, render_template, request,
-    send_from_directory, url_for)
+    Flask, jsonify, make_response,  request,
+    send_from_directory)
 from flask_cors import CORS
 from flask_graphql import GraphQLView
-from textblob import TextBlob
 
 from bripy.bllb.bllb_logging import setup_logging, get_dbg
 
 from constants import CONSTANTS
 from pagefunc import *
-from sample_data import sample_data
-from schema import extract, schema
+from schema import schema
 from query import query_url
 
 
