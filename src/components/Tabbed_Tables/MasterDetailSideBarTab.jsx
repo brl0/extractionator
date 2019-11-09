@@ -3,12 +3,12 @@ import classnames from "classnames";
 import styles from "./masterdetail.module.css";
 
 export default function MasterDetailSideBarTab(props) {
-  const { index, image, tabText, onDisplayTabClick } = props;
-  
+  const { index, tabText, onDisplayTabClick } = props;
+
   function onDisplayTabClickChange(index) {
     onDisplayTabClick(index);
   }
-  
+
   return (
     <button
       onClick={() => onDisplayTabClickChange(index)}
@@ -20,7 +20,6 @@ export default function MasterDetailSideBarTab(props) {
         styles.sidebarButton,
       )}
     >
-      <img src={image} alt="Default Grey Avatar" className="mr-3" />
       {tabText}
     </button>
   );

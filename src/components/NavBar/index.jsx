@@ -26,11 +26,13 @@ export default function NavBar() {
           extractionator
         </Link>
         <form>
-          <label>
-            URL
-            <input type="text" name="url" defaultValue={url} />
-          </label>
-          <input type="submit" value="Go" />
+          <div class="form-row">
+            <label for="urlInput1">
+              URL
+            </label>
+            <input type="text" name="url" id="urlInput1" className="form-control-sm" defaultValue={url} />
+            <button type="submit" className="btn btn-primary btn-sm">Go</button>
+          </div>
         </form>
         <div className="navbar-nav">
           <Link className="nav-item nav-link active" to={get_link("/JsonViewer")}>
