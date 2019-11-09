@@ -3,15 +3,12 @@ beautifulsoup4
 certifi
 chardet
 Click
-extraction
 Flask
 Flask-GraphQL
-flask-cors
 graphene
 graphql-core
 graphql-relay
 graphql-server-core
-html5lib
 idna
 itsdangerous
 Jinja2

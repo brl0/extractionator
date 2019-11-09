@@ -26,11 +26,11 @@ export default function NavBar() {
           extractionator
         </Link>
         <form>
-          <div class="form-row">
-            <label for="urlInput1">
+          <div className="form-row">
+            <label>
               URL
             </label>
-            <input type="text" name="url" id="urlInput1" className="form-control-sm" defaultValue={url} />
+            <input type="text" name="url" className="form-control-sm" defaultValue={url} />
             <button type="submit" className="btn btn-primary btn-sm">Go</button>
           </div>
         </form>

@@ -5,7 +5,6 @@ import queryString from 'query-string';
 import WarningMessage from "../WarningMessage";
 import MasterDetailPage from "./MasterDetailPage";
 import MasterDetailSideBarTab from "./MasterDetailSideBarTab";
-import GreyAvatar from "../../images/GreyAvatar.svg";
 import styles from "./masterdetail.module.css";
 import CONSTANTS from "../../constants";
 import buildPost, { buildQueries, } from "../../extractionator_util";

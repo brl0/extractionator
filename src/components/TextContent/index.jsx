@@ -3,7 +3,9 @@ import queryString from 'query-string';
 
 import CONSTANTS from "../../constants";
 
-import buildPost, { buildQueries } from "../../extractionator_util";
+import { buildQueries } from "../../extractionator_util";
+
+const axios = require('axios');
 
 export default class TextViewer extends Component {
   constructor(props) {
@@ -20,18 +22,20 @@ export default class TextViewer extends Component {
     if (url && url !== 'undefined') {
       var queryInfo = [['textInfo', 'text', url]];
       const queries = buildQueries(queryInfo);
-      const post = buildPost(queries);
-      fetch(CONSTANTS.ENDPOINT.GRAPHQL, post)
-      .then(response => {
-        if (!response.ok) {
-          console.log(response);
-          throw Error(response.statusText);
-        }
-        return response.json();
+      //const post = buildPost(queries);
+      axios({
+        method: 'post',
+        url: CONSTANTS.ENDPOINT.GRAPHQL,
+        data: queries,
+        headers: { 'Content-Type': 'application/json' },
       })
       .then(data => {
-        const content = data.data.textInfo.text;
+        const content = data.data.data.textInfo.text;
         this.setState({ data: content })
+      })
+      .catch(error => {
+        console.log(error);
+        throw Error(error);
       });
     }
   }
