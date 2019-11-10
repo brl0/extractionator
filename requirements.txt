@@ -1,5 +1,6 @@
 aniso8601
 beautifulsoup4
+boltons
 certifi
 chardet
 Click
@@ -13,13 +14,17 @@ graphql-relay
 graphql-server-core
 html5lib
 idna
+IPython
 itsdangerous
 Jinja2
 MarkupSafe
 promise
+PyPDF4
 requests
 Rx
 six
+sumy
+textblob
 urllib3
 webencodings
 Werkzeug

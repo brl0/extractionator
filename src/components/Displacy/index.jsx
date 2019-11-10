@@ -1,9 +1,11 @@
 ﻿import React, { Component } from "react";
 import queryString from 'query-string';
+import classnames from "classnames";
 
 import CONSTANTS from "../../constants";
 
 import buildPost, { buildQueries } from "../../extractionator_util";
+import styles from "./displacy.module.css";
 
 export default class DisplacyViewer extends Component {
   constructor(props) {
@@ -42,7 +44,10 @@ export default class DisplacyViewer extends Component {
     return (
       <main id="mainContent">
         <hr />
-        <div dangerouslySetInnerHTML={html} />
+        <div
+          dangerouslySetInnerHTML={html}
+          className={classnames(styles.displacyContent)}
+        />
         <hr />
       </main>
     );

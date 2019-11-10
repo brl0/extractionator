@@ -7,7 +7,7 @@ export default function GridComponent(props) {
   return (
     <div className="col-md-4 col-sm-12 p-5">
       <a href={image}>
-        <img src={image} alt="header" className="mb-3" width="50%" height="50%"/>
+        <img src={image} alt="" className="mb-3" width="75%" height="75%"/>
       </a>
       <p>{description}</p>
     </div>

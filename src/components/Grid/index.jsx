@@ -73,15 +73,13 @@ export default class Grid extends Component {
         <div className={classnames("text-center", styles.header)}>
           <h1>Images</h1>
           <p>{url}</p>
-        </div>
-
-        <div className="container">
           {titles.map(title => (
             <div className="row justify-content-center py-1">
-              <h1>{title}</h1>
+              <h4>{title}</h4>
             </div>
           ))}
-
+        </div>
+        <div className="container">
           <div className="row justify-content-around text-center pb-5">
             {images.map(image => (
               <GridComponent
