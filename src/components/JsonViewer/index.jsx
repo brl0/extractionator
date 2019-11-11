@@ -18,7 +18,6 @@ export default class JsonViewer extends ReactJson {
 
   componentDidMount() {
     const url = this.state.qs.url;
-    console.log(url);
     if (url) {
       const post = axiosFullQueryPost(url);
       axios(post)

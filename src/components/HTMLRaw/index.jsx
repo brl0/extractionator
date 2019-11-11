@@ -1,10 +1,15 @@
 ﻿import React, { Component } from "react";
 import queryString from 'query-string';
+import { Helmet } from "react-helmet";
+import classnames from "classnames";
 
+import styles from './htmlraw.module.css';
 import CONSTANTS from "../../constants";
 import buildPost, { buildQueries } from "../../extractionator_util";
 
-export default class HTMLViewer extends Component {
+var beautify = require('js-beautify').html;
+
+export default class HTMLRawViewer extends Component {
   constructor(props) {
     super(props);
 
@@ -26,12 +31,10 @@ export default class HTMLViewer extends Component {
           console.log(response);
           throw Error(response.statusText);
         }
-        console.log(response);
         return response.json();
       })
       .then(data => {
-        const content = data.data.htmlContent.html.slice(2,-1);
-        console.log(content.normalize());
+        const content = data.data.htmlContent.html.slice(2, -1).replace(/>/g, '>\n');
         this.setState({ data: content });
       });
     }
@@ -39,11 +42,16 @@ export default class HTMLViewer extends Component {
 
   render() {
     const { data } = this.state;
-    const html = {__html: data};
+    const html = beautify(data);
     return (
       <main id="mainContent">
+        <Helmet>
+          <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+        </Helmet>
         <hr />
-        <div dangerouslySetInnerHTML={html}/>
+        <pre className={classnames("prettyprint", styles.pre)}>
+          {html}
+        </pre>
         <hr />
       </main>
     );
