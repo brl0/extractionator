@@ -11,7 +11,6 @@ export default class ReactParser extends Component {
     super(props);
 
     this.state = {
-      data: "",
       qs: queryString.parse(this.props.location.search),
       reactElement: "",
     };
@@ -27,7 +26,7 @@ export default class ReactParser extends Component {
         const content = data.data.data.textInfo.text;
         var htmlToReactParser = new HtmlToReactParser();
         var reactElement = htmlToReactParser.parse(content);
-        this.setState({ data: content, reactElement: reactElement })
+        this.setState({ reactElement: reactElement })
       })
       .catch(error => {
         console.log(error);
@@ -37,7 +36,7 @@ export default class ReactParser extends Component {
   }
 
   render() {
-    const { data, reactElement } = this.state;
+    const { reactElement } = this.state;
     return (
       <main id="mainContent">
         <hr />

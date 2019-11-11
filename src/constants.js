@@ -30,6 +30,8 @@ const textInfoFields = 'url,links,summary,text';
 const nlpInfoFields = 'url,objects';
 const linksFields = 'url,links';
 const requestInfoFields = 'url,requestInfo';
+const htmlContentFields = 'html';
+const tagInfoFields = 'tagCols,tagData';
 
 CONSTANTS.TYPES = {
   'website': websiteFields,
@@ -38,6 +40,8 @@ CONSTANTS.TYPES = {
   'nlpInfo': nlpInfoFields,
   'links': linksFields,
   'requestInfo': requestInfoFields,
+  'htmlContent': htmlContentFields,
+  'tagInfo': tagInfoFields,
 };
 
 export default CONSTANTS;
