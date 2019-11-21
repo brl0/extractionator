@@ -23,6 +23,7 @@ PyPDF4
 requests
 Rx
 six
+snowballstemmer
 sumy
 textblob
 urllib3
