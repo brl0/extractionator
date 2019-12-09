@@ -2,9 +2,9 @@
 import ReactJson from "react-json-view";
 import queryString from 'query-string';
 
-import CONSTANTS from "../../constants";
+import { axiosFullQueryPost } from "../../extractionator_util";
 
-import buildPost, { buildQueries } from "../../extractionator_util";
+const axios = require('axios');
 
 export default class JsonViewer extends ReactJson {
   constructor(props) {
@@ -18,23 +18,17 @@ export default class JsonViewer extends ReactJson {
 
   componentDidMount() {
     const url = this.state.qs.url;
-    console.log(url);
-    if (url && url !== 'undefined') {
-      var queryInfo = [];
-      for (let [key, value] of Object.entries(CONSTANTS.TYPES)) {
-        queryInfo.push([key, value, url]);
-      }
-      const queries = buildQueries(queryInfo);
-      const post = buildPost(queries);
-      fetch(CONSTANTS.ENDPOINT.GRAPHQL, post)
-      .then(response => {
-        if (!response.ok) {
-          console.log(response);
-          throw Error(response.statusText);
-        }
-        return response.json();
+    if (url) {
+      const post = axiosFullQueryPost(url);
+      axios(post)
+      .then(data => {
+        const content = data.data;
+        this.setState({ data: content });
       })
-      .then(data => this.setState({ data }));
+      .catch(error => {
+        console.log(error);
+        throw Error(error);
+      });
     }
   }
 

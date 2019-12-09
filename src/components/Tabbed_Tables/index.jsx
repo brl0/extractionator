@@ -5,7 +5,6 @@ import queryString from 'query-string';
 import WarningMessage from "../WarningMessage";
 import MasterDetailPage from "./MasterDetailPage";
 import MasterDetailSideBarTab from "./MasterDetailSideBarTab";
-import GreyAvatar from "../../images/GreyAvatar.svg";
 import styles from "./masterdetail.module.css";
 import CONSTANTS from "../../constants";
 import buildPost, { buildQueries, } from "../../extractionator_util";
@@ -37,7 +36,6 @@ export default class Tabbed_Detail extends Component {
         queryInfo.push([key, value, url]);
       }
       const queries = buildQueries(queryInfo);
-      console.log(queries);
       const post = buildPost(queries);
       fetch(CONSTANTS.ENDPOINT.GRAPHQL, post)
         .then(response => {
@@ -106,14 +104,13 @@ export default class Tabbed_Detail extends Component {
                   <MasterDetailSideBarTab
                     onDisplayTabClick={this.handleDisplayTabClick}
                     tabText={key}
-                    image={GreyAvatar}
                     index={index++}
                     key={key.id}
                   />))
                 }
               </div>
             </div>
-            <MasterDetailPage 
+            <MasterDetailPage
               data={data[Object.keys(data)[currentDisplayTabIndex]]}
               title={Object.keys(data)[currentDisplayTabIndex]}
               />

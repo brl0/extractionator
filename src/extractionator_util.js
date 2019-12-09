@@ -1,3 +1,5 @@
+import CONSTANTS from "./constants";
+
 const getURLQuery = (qType, fields, url) => JSON.stringify(`${qType}(url:"${url}"){${fields}}`);
 
 export function buildQueries(infoArrays) {
@@ -11,6 +13,36 @@ function buildQuery(qInfo) {
   const [ qType, fields, url ] = qInfo;
   const subQuery = getURLQuery(qType, fields, url).slice(1,-1);
   return subQuery;
+}
+
+export function axiosBuildPost(url, queries) {
+  return ({
+    method: 'post',
+    url: url,
+    data: queries,
+    headers: {
+      'Content-Type': 'application/json'
+    },
+  });
+}
+
+export function axiosBuildQueryPost(infoArrays) {
+  const queries = buildQueries(infoArrays);
+  const url = CONSTANTS.ENDPOINT.GRAPHQL;
+  return axiosBuildPost(url, queries);
+}
+
+export function makeFullQueryArray(url) {
+  var queryInfo = [];
+  for (let [key, value] of Object.entries(CONSTANTS.TYPES)) {
+    queryInfo.push([key, value, url]);
+  }
+  return queryInfo;
+}
+
+export function axiosFullQueryPost(url) {
+  const queryInfo = makeFullQueryArray(url);
+  return axiosBuildQueryPost(queryInfo);
 }
 
 
@@ -40,7 +72,7 @@ export function objectToArray (obj) {
           && item.length >= 1 ) {
         for (var it in item) {
           dataset.push([
-            counter++, 
+            counter++,
             fields[idx],
             item[it],
           ]);
@@ -48,7 +80,7 @@ export function objectToArray (obj) {
       }
       else if (JSON.stringify(item) !== '[]') {
         dataset.push([
-          counter++, 
+          counter++,
           fields[idx],
           item,
         ]);

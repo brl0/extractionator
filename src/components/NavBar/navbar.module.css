@@ -13,3 +13,12 @@
   color: #ffffff;
   background: #000000;
 }
+
+input {
+  margin: 10px;
+  background-color: #eeeeee;
+}
+
+form {
+  padding: 10px;
+}

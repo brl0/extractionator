@@ -108,7 +108,6 @@ export default class MuiTable extends Component {
             columns={tagCols}
             options={options}
           />
-
         </div>
       );
     }
