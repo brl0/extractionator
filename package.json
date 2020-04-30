@@ -13,7 +13,7 @@
     "graphql": "^14.5.8",
     "graphql.macro": "^1.4.2",
     "html-to-react": "^1.4.2",
-    "jquery": "^3.4.1",
+    "jquery": "^3.5.0",
     "js-beautify": "^1.10.2",
     "mui-datatables": "^2.12.4",
     "query-string": "^6.8.3",
